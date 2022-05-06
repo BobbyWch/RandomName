@@ -122,7 +122,7 @@ public final class Names implements java.io.Serializable {
 
     public static void save() {
         try {
-            FileOutputStream os = new FileOutputStream("Name.dat");
+            FileOutputStream os = new FileOutputStream(path);
             ObjectOutputStream objectS = new ObjectOutputStream(os);
             objectS.writeObject(getInstance());
             objectS.flush();
