@@ -3,6 +3,7 @@ package is.bobbys;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,6 +14,7 @@ public final class Names implements java.io.Serializable {
     private final static long serialVersionUID = 25250250;
 
     private static Names instance = null;
+    public static String path="Name.dat";
 
     public static Names getInstance() {
         if (instance == null) {
@@ -134,18 +136,20 @@ public final class Names implements java.io.Serializable {
 
     public static Names read() {
         try {
-            FileInputStream is = new FileInputStream("Name.dat");
+            FileInputStream is = new FileInputStream(path);
             ObjectInputStream ois = new ObjectInputStream(is);
             return ((Names) ois.readObject());
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null,path);
             return null;
         }
     }
 
 
     public static final class Entry implements java.io.Serializable {
+        @Serial
         private final static long serialVersionUID = 250250;
 
         public final String name;
