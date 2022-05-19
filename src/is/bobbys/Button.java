@@ -2,6 +2,7 @@ package is.bobbys;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ public final class Button extends JButton {
     private void stop() {
         started = false;
     }
-
+private final HashSet<String> olds=new HashSet<>();
     private final Runnable func = () -> {
         started = true;
         try {
@@ -42,9 +43,14 @@ public final class Button extends JButton {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (getText().equals(lastName)) {
-            setText(names.getRand());
+        while (true){
+            if (olds.contains(getText())) {
+                setText(names.getRand());
+            }else {
+                break;
+            }
         }
-        lastName = getText();
+        olds.add(getText());
+        if (olds.size()==names.list.size()/2) olds.clear();
     };
 }
