@@ -31,11 +31,14 @@ public final class Main {
         frame.setResizable(false);
         frame.setSize(350, 200);
         putMiddle(frame);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.getContentPane().add(new Button(font), BorderLayout.CENTER);
         frame.setVisible(true);
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            Names.save();
+        }));
     }
 
     public static void putMiddle(Container container) {
