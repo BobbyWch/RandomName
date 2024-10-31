@@ -15,30 +15,21 @@ public final class Main {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        if (args.length != 0) {
-            boolean flag = false;
-            for (String s : args) {
-                if (s.equals("setting")) flag = true;
-                else if (s.startsWith("path=")) Names.path = s.substring(s.indexOf("=") + 1);
-            }
-            if (flag) {
+        if (args.length == 1) {
+            if (args[0].equals("setting")) {
                 putMiddle(new ToolFrame());
-                return;
             }
+        } else {
+            loadFont();
+            JFrame frame = new JFrame("随机点名");
+            frame.setResizable(false);
+            frame.setSize(350, 200);
+            putMiddle(frame);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            frame.getContentPane().add(new Button(font), BorderLayout.CENTER);
+            frame.setVisible(true);
         }
-        loadFont();
-        JFrame frame = new JFrame("随机点名");
-        frame.setResizable(false);
-        frame.setSize(350, 200);
-        putMiddle(frame);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.getContentPane().add(new Button(font), BorderLayout.CENTER);
-        frame.setVisible(true);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            Names.save();
-        }));
     }
 
     public static void putMiddle(Container container) {
