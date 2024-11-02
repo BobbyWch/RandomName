@@ -34,6 +34,7 @@ public final class Names implements java.io.Serializable {
     private Names() {
         random = new Random();
         list = new ArrayList<>(32);
+        endIndex = 1; // 初始化 endIndex 为 1，确保它始终为正数
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("选择名字列表");
         chooser.setFileFilter(new FileNameExtensionFilter("文本文件(*.txt)", "txt"));
@@ -62,10 +63,12 @@ public final class Names implements java.io.Serializable {
     }
 
     public String getRand() {
+        if (endIndex <= 0) {
+            System.err.println("Error: endIndex must be positive, but it is " + endIndex);
+            return null;
+        }
         int r = random.nextInt(endIndex);
-        Entry entry;
-        for (int i=0;i<list.size();i++) {
-            entry=list.get(i);
+        for (Entry entry : list) {
             if (entry.isBetween(r)) {
                 return entry.name;
             }
@@ -74,21 +77,25 @@ public final class Names implements java.io.Serializable {
     }
 
     public void add(Entry entry) {
+        if (list.isEmpty()) {
+            endIndex = entry.endIndex; // 如果列表为空，设置 endIndex 为第一个 entry 的 endIndex
+        } else {
+            if (entry.endIndex > endIndex) {
+                endIndex = entry.endIndex;
+            }
+        }
         list.add(entry);
-        if (entry.endIndex > endIndex)
-            endIndex = entry.endIndex;
     }
 
     public Entry getByName(String name) {
-        Entry entry;
-        for (int i=0;i<list.size();i++) {
-            entry=list.get(i);
+        for (Entry entry : list) {
             if (entry.name.equals(name)) {
                 return entry;
             }
         }
         return null;
     }
+
     public void remove(Entry entry){
         list.remove(entry);
         order();
@@ -102,6 +109,7 @@ public final class Names implements java.io.Serializable {
         order();
         return true;
     }
+
     private void order(){
         Entry temp = list.get(0);
         Entry temp1;
@@ -143,7 +151,6 @@ public final class Names implements java.io.Serializable {
             return null;
         }
     }
-
 
     public static final class Entry implements java.io.Serializable {
         private final static long serialVersionUID = 250250;
