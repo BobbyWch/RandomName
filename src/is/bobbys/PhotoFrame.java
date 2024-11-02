@@ -4,11 +4,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class PhotoFrame extends JFrame {
     private JLabel imageLabel;
+    private boolean errorShown = false; // 用于跟踪是否已显示错误对话框
 
     public PhotoFrame() {
         super("Photo");
@@ -22,25 +24,43 @@ public class PhotoFrame extends JFrame {
     }
 
     public void updateImage(String name) {
-        try {
-            String path = "/is/photos/" + name + ".png";
-            URL url = getClass().getResource(path);
-            if (url == null) {
-                throw new IOException("Resource not found: " + path);
-            }
-            ImageIcon imageIcon = new ImageIcon(url);
+        String externalPath = System.getProperty("user.dir") + File.separator + "photos" + File.separator + name + ".png";
+        File externalFile = new File(externalPath);
+
+        if (externalFile.exists()) {
+            // 图片存在于外部目录
+            ImageIcon imageIcon = new ImageIcon(externalPath);
             Image image = imageIcon.getImage();
-            if (image == null) {
-                throw new IOException("Image not found: " + path);
-            }
             Image scaledImage = getScaledImage(image, this.getWidth(), this.getHeight());
             SwingUtilities.invokeLater(() -> {
                 imageLabel.setIcon(new ImageIcon(scaledImage));
                 this.setVisible(true);
             });
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Unable to load image: " + name + ".png");
+        } else {
+            // 尝试从jar内置资源加载图片
+            try {
+                URL url = getClass().getResource("/is/photos/" + name + ".png");
+                if (url != null) {
+                    ImageIcon imageIcon = new ImageIcon(url);
+                    Image image = imageIcon.getImage();
+                    Image scaledImage = getScaledImage(image, this.getWidth(), this.getHeight());
+                    SwingUtilities.invokeLater(() -> {
+                        imageLabel.setIcon(new ImageIcon(scaledImage));
+                        this.setVisible(true);
+                    });
+                } else {
+                    if (!errorShown) { // 只显示一次错误对话框
+                        errorShown = true;
+                        JOptionPane.showMessageDialog(this, "Unable to load image: " + name + ".png");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (!errorShown) { // 只显示一次错误对话框
+                    errorShown = true;
+                    JOptionPane.showMessageDialog(this, "Unable to load image: " + name + ".png");
+                }
+            }
         }
     }
 
@@ -64,5 +84,9 @@ public class PhotoFrame extends JFrame {
 
     public void hidePhoto() {
         this.setVisible(false);
+    }
+
+    public void resetErrorFlag() {
+        this.errorShown = false; // 重置错误对话框标志
     }
 }
