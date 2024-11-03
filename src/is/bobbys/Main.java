@@ -3,7 +3,6 @@ package is.bobbys;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,21 +18,22 @@ public class Main {
         frame.setLayout(new BorderLayout());
         frame.setResizable(false); // 设置窗口不可调整大小
 
+        // 添加复选框来控制窗口是否始终位于最上层
         JCheckBox alwaysOnTopCheckBox = new JCheckBox("强制置顶(用于PPT播放期间)");
-        alwaysOnTopCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    frame.setAlwaysOnTop(true);
-                } else {
-                    frame.setAlwaysOnTop(false);
-                }
+        alwaysOnTopCheckBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                frame.setAlwaysOnTop(true);
+            } else {
+                frame.setAlwaysOnTop(false);
             }
         });
 
         Button button = new Button(new Font("微软雅黑", Font.PLAIN, 60));
         frame.add(button, BorderLayout.CENTER);
         frame.add(alwaysOnTopCheckBox, BorderLayout.SOUTH);
+
+        // 将窗口居中于屏幕
+        frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
     }
