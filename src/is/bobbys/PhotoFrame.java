@@ -18,7 +18,7 @@ public class PhotoFrame extends JFrame {
         this.add(imageLabel, BorderLayout.CENTER);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setResizable(false); // 设置窗口不可调整大小
-        this.setSize(400, 400); // 设置窗口大小为 400x400
+        this.setSize(324, 484); // 设置窗口大小为 400x400
         this.setLocation(0, 0); // 设置窗口位置到屏幕左上角
         this.setVisible(false); // 初始时不显示窗口
     }
