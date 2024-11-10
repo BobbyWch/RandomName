@@ -13,7 +13,7 @@ public final class ToolFrame extends JFrame {
     public ToolFrame() {
         super("设置");
         String s=JOptionPane.showInputDialog("输入root密码");
-        if (s==null||!s.equals("NmYYDS")) System.exit(0);
+        if (s==null||!s.equals("NHFLS")) System.exit(0);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(400, 460);
